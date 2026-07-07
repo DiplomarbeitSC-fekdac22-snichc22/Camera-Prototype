@@ -13,6 +13,7 @@ function App() {
       const response = await fetch(healthUrl);
       const data = await response.json();
       alert(JSON.stringify(data, null, 2));
+
     } catch (error) {
       alert("Backend not reachable. Check IP address and port 8000.");
       console.error(error);
