@@ -1,0 +1,18 @@
+# Python
+backend/.venv/
+backend/venv/
+__pycache__/
+*.pyc
+
+# React / Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# IDE
+.idea/
+.vscode/
+
+# Env files
+.env
+*.env
