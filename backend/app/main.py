@@ -5,7 +5,6 @@ from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse
 
-
 app = FastAPI(title="Camera Prototype Backend")
 
 app.add_middleware(
@@ -28,7 +27,6 @@ class Camera:
     def open_camera(self):
         self.cap = cv2.VideoCapture(self.camera_index)
 
-        # Try to force a simple 720p setup
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         self.cap.set(cv2.CAP_PROP_FPS, 30)
@@ -46,7 +44,6 @@ class Camera:
             if not success:
                 return None
 
-            # Encode frame as JPEG
             success, buffer = cv2.imencode(".jpg", frame)
 
             if not success:
@@ -110,8 +107,8 @@ def generate_frames():
             b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"
         )
 
-        # Small delay so the Pi does not go crazy
         time.sleep(0.03)
+
 
 
 @app.get("/video")
