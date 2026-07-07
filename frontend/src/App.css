@@ -1,92 +1,57 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #111;
-  color: white;
+  background: #ffffff;
+  color: black;
+  font-family: Arial, sans-serif;
 }
 
 .page {
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 32px;
-}
-
-.card {
-  width: 100%;
-  max-width: 1000px;
-  background: #1c1c1c;
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  text-align: center;
 }
 
 h1 {
-  margin-top: 0;
-  font-size: 36px;
+  font-size: 64px;
+  color: #333333;
 }
 
-.subtitle {
-  color: #bbb;
-  margin-bottom: 24px;
-}
-
-.input-row {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.input-row label {
-  font-weight: bold;
-}
-
-.input-row input {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #555;
-  background: #111;
-  color: white;
-  font-size: 16px;
+.logo {
+  width:384px;
+  height:192px;
+  padding: 20px;
 }
 
 .buttons {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
-button,
-a {
+button {
+  padding: 12px 18px;
   border: none;
-  background: white;
-  color: black;
-  padding: 10px 14px;
+  background-color: #003053;
   border-radius: 10px;
   font-weight: bold;
-  text-decoration: none;
   cursor: pointer;
 }
 
 .camera-box {
-  width: 100%;
-  aspect-ratio: 16 / 9;
+  width: 90%;
+  max-width: 1000px;
+  aspect-ratio: 4 / 3;
+  margin: 0 auto;
+  margin-top: 20px;
   background: black;
+  border: 2px solid #333;
   border-radius: 16px;
   overflow: hidden;
-  border: 2px solid #333;
 }
 
 .camera-box img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  display: block;
 }

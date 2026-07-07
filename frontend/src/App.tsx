@@ -1,61 +1,39 @@
-import { useState } from "react";
+import {useState} from "react";
 import "./App.css";
 
 function App() {
-  const [backendUrl, setBackendUrl] = useState("http://192.168.74.17:8000");
+    const backendUrl = `http://192.168.74.17:8000`;
 
-  const streamUrl = `${backendUrl}/video`;
-  const snapshotUrl = `${backendUrl}/snapshot`;
-  const healthUrl = `${backendUrl}/health`;
+    const rawUrl = `${backendUrl}/video`;
+    const detectUrl = `${backendUrl}/detect`;
 
-  const checkBackend = async () => {
-    try {
-      const response = await fetch(healthUrl);
-      const data = await response.json();
-      alert(JSON.stringify(data, null, 2));
+    const [streamUrl, setStreamUrl] = useState(rawUrl);
 
-    } catch (error) {
-      alert("Backend not reachable. Check IP address and port 8000.");
-      console.error(error);
-    }
-  };
+    return (
+        <main className="page">
+            <h1>Camera Detection v.1</h1>
 
-  return (
-      <main className="page">
-        <section className="card">
-          <h1>Camera Prototype</h1>
+            <img className="logo" src="../src/assets/logo.png" alt="Pia Automation logo" />
 
-          <p className="subtitle">
-            Simple USB camera stream from Python backend to React frontend.
-          </p>
+            <div className="buttons">
+                <button onClick={() => setStreamUrl(rawUrl)}>
+                    Raw Stream
+                </button>
 
-          <div className="input-row">
-            <label>Backend URL</label>
-            <input
-                value={backendUrl}
-                onChange={(event) => setBackendUrl(event.target.value)}
-                placeholder="http://192.168.178.xxx:8000"
-            />
-          </div>
+                <button onClick={() => setStreamUrl(detectUrl)}>
+                    Detection Stream
+                </button>
+            </div>
 
-          <div className="buttons">
-            <button onClick={checkBackend}>Check backend</button>
+            <p>
+                Current stream: <code>{streamUrl}</code>
+            </p>
 
-            <a href={snapshotUrl} target="_blank">
-              Open snapshot
-            </a>
-
-            <a href={streamUrl} target="_blank">
-              Open raw stream
-            </a>
-          </div>
-
-          <div className="camera-box">
-            <img src={streamUrl} alt="Live camera stream" />
-          </div>
-        </section>
-      </main>
-  );
+            <div className="camera-box">
+                <img key={streamUrl} src={streamUrl} alt="Camera stream"/>
+            </div>
+        </main>
+    );
 }
 
 export default App;
