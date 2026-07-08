@@ -6,6 +6,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from ultralytics import YOLO
+from picamera2 import Picamera2
+from libcamera import controls
 
 
 app = FastAPI()
@@ -22,22 +24,38 @@ print("Loading YOLO model...")
 model = YOLO("yolov8n.pt")
 print("YOLO model loaded.")
 
-camera = cv2.VideoCapture(0, cv2.CAP_V4L2)
+print("Starting Raspberry Pi Camera Module 3...")
+camera = Picamera2()
 
-camera.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-camera.set(cv2.CAP_PROP_FPS, 15)
+camera_config = camera.create_video_configuration(
+    main={
+        "size": (1920, 1080),
+        "format": "RGB888",
+    }
+)
+
+camera.configure(camera_config)
+camera.start()
+
+# Camera Module 3 has autofocus.
+camera.set_controls({
+    "AfMode": controls.AfModeEnum.Continuous
+})
+
+time.sleep(1)
+
+print("Pi camera started.")
 
 camera_lock = threading.Lock()
 
 
 def read_camera():
     with camera_lock:
-        success, frame = camera.read()
+        frame = camera.capture_array()
 
-    if not success:
-        return None
+    # Picamera2 gives RGB.
+    # OpenCV/JPEG/YOLO pipeline is easier with BGR.
+    # frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
     return frame
 
@@ -62,10 +80,6 @@ def raw_stream():
     while True:
         frame = read_camera()
 
-        if frame is None:
-            time.sleep(0.1)
-            continue
-
         jpeg = make_jpeg(frame)
 
         if jpeg is None:
@@ -80,10 +94,6 @@ def raw_stream():
 def detection_stream():
     while True:
         frame = read_camera()
-
-        if frame is None:
-            time.sleep(0.1)
-            continue
 
         result = model.predict(
             source=frame,
@@ -124,4 +134,4 @@ def detect():
 
 @app.on_event("shutdown")
 def shutdown():
-    camera.release()
+    camera.stop()
