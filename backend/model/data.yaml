@@ -1,0 +1,7 @@
+path: /home/fekdac/Development/htl/diplomarbeit/Code/Camera-Prototype/backend/model/custom_data
+train: train/images
+val: validation/images
+nc: 2
+names:
+- Ball
+- Car
