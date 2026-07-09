@@ -112,7 +112,6 @@ def detection_stream():
 
         yield send_frame(jpeg)
 
-
 @app.get("/video")
 def video():
     return StreamingResponse(
