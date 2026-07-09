@@ -9,7 +9,6 @@ from ultralytics import YOLO
 from picamera2 import Picamera2
 from libcamera import controls
 
-
 app = FastAPI()
 
 app.add_middleware(
@@ -20,16 +19,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Set up Model
 print("Loading YOLO model...")
-model = YOLO("yolov8n.pt")
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+model = YOLO(str(BASE_DIR / "best.pt"))
 print("YOLO model loaded.")
 
+# Set up Camera
 print("Starting Raspberry Pi Camera Module 3...")
 camera = Picamera2()
 
 camera_config = camera.create_video_configuration(
     main={
-        "size": (1920, 1080),
+        "size": (1280, 720),
         "format": "RGB888",
     }
 )
@@ -37,7 +41,7 @@ camera_config = camera.create_video_configuration(
 camera.configure(camera_config)
 camera.start()
 
-# Camera Module 3 has autofocus.
+# Camera autofocus.
 camera.set_controls({
     "AfMode": controls.AfModeEnum.Continuous
 })
@@ -52,10 +56,6 @@ camera_lock = threading.Lock()
 def read_camera():
     with camera_lock:
         frame = camera.capture_array()
-
-    # Picamera2 gives RGB.
-    # OpenCV/JPEG/YOLO pipeline is easier with BGR.
-    # frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
     return frame
 
@@ -98,7 +98,7 @@ def detection_stream():
         result = model.predict(
             source=frame,
             imgsz=320,
-            conf=0.35,
+            conf=0.30,
             verbose=False,
         )[0]
 
@@ -111,9 +111,6 @@ def detection_stream():
             continue
 
         yield send_frame(jpeg)
-
-        # Detection is slower than raw camera.
-        time.sleep(0.3)
 
 
 @app.get("/video")

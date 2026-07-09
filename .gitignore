@@ -1,18 +1,27 @@
 # Python
-backend/.venv/
-backend/venv/
 __pycache__/
-*.pyc
+*.py[cod]
+.venv/
+venv/
+.env
 
-# React / Node
+# Node / React
 frontend/node_modules/
 frontend/dist/
+frontend/.env
 frontend/.vite/
 
-# IDE
+# YOLO training data / generated files
+data/
+backend/best.pt
+backend/model/custom_data/
+backend/model/data/
+backend/model/runs/
+backend/model/*.zip
+backend/model/*.pt
+backend/model/*.cache
+
+# IDE / OS
 .idea/
 .vscode/
-
-# Env files
-.env
-*.env
+.DS_Store

@@ -1,8 +1,9 @@
-import {useState} from "react";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
-    const backendUrl = `http://192.168.74.17:8000`;
+    const raspberryPiIp = import.meta.env.VITE_RASPBERRY_PI_IP;
+    const backendUrl = `http://${raspberryPiIp}:8000`;
 
     const rawUrl = `${backendUrl}/video`;
     const detectUrl = `${backendUrl}/detect`;
@@ -13,7 +14,11 @@ function App() {
         <main className="page">
             <h1>Camera Detection v.1</h1>
 
-            <img className="logo" src="../src/assets/logo.png" alt="Pia Automation logo" />
+            <img
+                className="logo"
+                src="/src/assets/logo.png"
+                alt="Pia Automation logo"
+            />
 
             <div className="buttons">
                 <button onClick={() => setStreamUrl(rawUrl)}>
@@ -30,7 +35,7 @@ function App() {
             </p>
 
             <div className="camera-box">
-                <img key={streamUrl} src={streamUrl} alt="Camera stream"/>
+                <img key={streamUrl} src={streamUrl} alt="Camera stream" />
             </div>
         </main>
     );
