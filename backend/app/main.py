@@ -95,6 +95,7 @@ def detection_stream():
     while True:
         frame = read_camera()
 
+        # configure model settings
         result = model.predict(
             source=frame,
             imgsz=320,
